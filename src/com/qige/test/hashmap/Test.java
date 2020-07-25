@@ -1,9 +1,6 @@
-package com.luoxiaohei.test.hashmap;
+package com.qige.test.hashmap;
 
-import javax.xml.transform.Source;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * @description:

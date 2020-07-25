@@ -1,4 +1,4 @@
-package com.luoxiaohei.test.pattern.decorator;
+package com.qige.test.pattern.decorator;
 
 /**
  * @description:

@@ -1,6 +1,5 @@
-package com.luoxiaohei.test.blockingqueue;
+package com.qige.test.blockingqueue;
 
-import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 

@@ -1,8 +1,4 @@
-package com.luoxiaohei.test.pattern.factory;
-
-import com.sun.org.apache.bcel.internal.generic.RETURN;
-
-import java.sql.SQLOutput;
+package com.qige.test.pattern.factory;
 
 public class Student5 {
     /**

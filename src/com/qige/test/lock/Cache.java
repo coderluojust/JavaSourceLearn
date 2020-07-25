@@ -1,4 +1,4 @@
-package com.luoxiaohei.test.lock;
+package com.qige.test.lock;
 
 import java.util.HashMap;
 import java.util.Map;
