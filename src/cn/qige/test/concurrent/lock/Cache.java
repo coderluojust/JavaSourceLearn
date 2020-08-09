@@ -1,4 +1,4 @@
-package com.qige.test.lock;
+package test.concurrent.lock;
 
 import java.util.HashMap;
 import java.util.Map;

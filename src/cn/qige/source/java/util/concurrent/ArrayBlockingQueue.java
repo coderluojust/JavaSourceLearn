@@ -90,6 +90,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
     final Object[] items;
 
     /** items index for next take, poll, peek or remove */
+    // 下一次出队元素的位置
     int takeIndex;
 
     /** items index for next put, offer, or add */
@@ -160,7 +161,6 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
         // assert items[putIndex] == null;
         final Object[] items = this.items;
         items[putIndex] = x;
-        //
         if (++putIndex == items.length)
             putIndex = 0;
         // 队列的元素数量，插入后要增加1
@@ -173,18 +173,22 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
      * Extracts element at current take position, advances, and signals.
      * Call only when holding lock.
      */
+    // 出队操作，必须先获取到锁才能调用
     private E dequeue() {
         // assert lock.getHoldCount() == 1;
         // assert items[takeIndex] != null;
         final Object[] items = this.items;
         @SuppressWarnings("unchecked")
         E x = (E) items[takeIndex];
+        // 出队一个元素，将这个位置置为null，即为删除
         items[takeIndex] = null;
         if (++takeIndex == items.length)
             takeIndex = 0;
+        // 队列大小减一
         count--;
         if (itrs != null)
             itrs.elementDequeued();
+        // 通知所有因为队列满阻塞的线程
         notFull.signal();
         return x;
     }

@@ -1761,10 +1761,12 @@ public abstract class AbstractQueuedSynchronizer
      * @return true if successfully transferred (else the node was
      * cancelled before signal)
      */
+    // 将节点从条件队列转移到同步队列,Returns true 代表成功
     final boolean transferForSignal(Node node) {
         /*
          * If cannot change waitStatus, the node has been cancelled.
          */
+        // 如果无法改变状态，说明该节点已被取消
         if (!compareAndSetWaitStatus(node, Node.CONDITION, 0))
             return false;
 
@@ -1776,7 +1778,9 @@ public abstract class AbstractQueuedSynchronizer
          */
         Node p = enq(node);
         int ws = p.waitStatus;
+        // ws 大于0说明当前线程取消了等待
         if (ws > 0 || !compareAndSetWaitStatus(p, ws, Node.SIGNAL))
+            // 解锁当前node线程
             LockSupport.unpark(node.thread);
         return true;
     }
@@ -1810,6 +1814,8 @@ public abstract class AbstractQueuedSynchronizer
      * @param node the condition node for this wait
      * @return previous sync state
      */
+    // 调用带有当前状态值的释放;
+    // 返回保存的状态。
     final int fullyRelease(Node node) {
         boolean failed = true;
         try {
@@ -1963,10 +1969,15 @@ public abstract class AbstractQueuedSynchronizer
          */
         private void doSignal(Node first) {
             do {
+                // 将等待第一个元素置为当前队首firstWaiter的下一个
+                // 等待队列中的第一个节点后没有元素，说明这是最后一个了，则将
+                // lastWaiter 置为null
                 if ( (firstWaiter = first.nextWaiter) == null)
                     lastWaiter = null;
+                // 将首节点从链表中移除
                 first.nextWaiter = null;
             } while (!transferForSignal(first) &&
+                    // 找到一个不为null，并且在等待的线程节点
                      (first = firstWaiter) != null);
         }
 
@@ -2031,6 +2042,7 @@ public abstract class AbstractQueuedSynchronizer
         public final void signal() {
             if (!isHeldExclusively())
                 throw new IllegalMonitorStateException();
+            // 条件队列的第一个节点
             Node first = firstWaiter;
             if (first != null)
                 doSignal(first);
@@ -2126,6 +2138,7 @@ public abstract class AbstractQueuedSynchronizer
         public final void await() throws InterruptedException {
             if (Thread.interrupted())
                 throw new InterruptedException();
+            // 添加一个新的节点线程到等待队列
             Node node = addConditionWaiter();
             int savedState = fullyRelease(node);
             int interruptMode = 0;

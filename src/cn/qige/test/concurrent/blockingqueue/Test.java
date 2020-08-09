@@ -1,7 +1,6 @@
-package com.qige.test.blockingqueue;
+package test.concurrent.blockingqueue;
 
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @description:
@@ -15,8 +14,7 @@ public class Test {
         arrayBlockingQueue.offer(1);
         arrayBlockingQueue.put("2");
         System.out.println("满了");
-        boolean offer = arrayBlockingQueue.offer(3, 3000, TimeUnit.MILLISECONDS);
-        System.out.println(offer);
+        arrayBlockingQueue.put(3);
         for (Object i : arrayBlockingQueue) {
             System.out.println(i);
         }

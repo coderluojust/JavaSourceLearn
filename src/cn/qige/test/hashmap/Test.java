@@ -1,4 +1,4 @@
-package com.qige.test.hashmap;
+package test.hashmap;
 
 import java.util.HashMap;
 
