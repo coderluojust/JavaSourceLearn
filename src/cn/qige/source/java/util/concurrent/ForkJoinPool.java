@@ -736,8 +736,9 @@ public class ForkJoinPool extends AbstractExecutorService {
 
     // Constants shared across ForkJoinPool and WorkQueue
 
-    // Bounds
+    // Bounds 65535
     static final int SMASK        = 0xffff;        // short bits == max index
+    // 32767
     static final int MAX_CAP      = 0x7fff;        // max #workers - 1
     static final int EVENMASK     = 0xfffe;        // even short bits
     static final int SQMASK       = 0x007e;        // max 64 (even) slots
@@ -1379,6 +1380,7 @@ public class ForkJoinPool extends AbstractExecutorService {
     volatile int runState;               // lockable status
     final int config;                    // parallelism, mode
     int indexSeed;                       // to generate worker index
+    // 工作队列，用于存放各个线程的任务
     volatile WorkQueue[] workQueues;     // main registry
     final ForkJoinWorkerThreadFactory factory;
     final UncaughtExceptionHandler ueh;  // per-worker UEH
@@ -2384,6 +2386,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      *
      * @param task the task. Caller must ensure non-null.
      */
+    // 尝试将task添加到当前线程的工作队列中，极大可能会在这个方法中处理
     final void externalPush(ForkJoinTask<?> task) {
         WorkQueue[] ws; WorkQueue q; int m;
         int r = ThreadLocalRandom.getProbe();
@@ -2470,6 +2473,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      *         because it does not hold {@link
      *         java.lang.RuntimePermission}{@code ("modifyThread")}
      */
+    // 创建一个fork/join容器,线程并发数和虚拟机可以使用的cpu核数一直
     public ForkJoinPool() {
         this(Math.min(MAX_CAP, Runtime.getRuntime().availableProcessors()),
              defaultForkJoinWorkerThreadFactory, null, false);

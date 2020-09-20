@@ -636,6 +636,7 @@ public class Runtime {
      *          machine; never smaller than one
      * @since 1.4
      */
+    // 返回Java虚拟机可用的处理器数量。
     public native int availableProcessors();
 
     /**
