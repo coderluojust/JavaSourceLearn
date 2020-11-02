@@ -17,10 +17,10 @@ public class AtomicArrayTest {
         int[] value = new int[]{1,2};
         AtomicIntegerArray atomicIntegerArray = new AtomicIntegerArray(value);
         int andSet = atomicIntegerArray.getAndSet(0, 3);
-        System.out.println(atomicIntegerArray.addAndGet(0,1));
         // 以原子方式设置为newValue的值，并返回旧值
+        Assert.assertEquals(4,atomicIntegerArray.addAndGet(0,1));
         Assert.assertEquals(1,andSet);
-        Assert.assertEquals(3,atomicIntegerArray.get(0));
+        Assert.assertEquals(4,atomicIntegerArray.get(0));
         // AtomicIntegerArray会将传入的数组复制一份，不会影响原数组
         Assert.assertEquals(1,value[0]);
 

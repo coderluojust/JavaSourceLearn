@@ -57,21 +57,26 @@ public class AtomicInteger extends Number implements java.io.Serializable {
     private static final long serialVersionUID = 6214790243416807050L;
 
     // setup to use Unsafe.compareAndSwapInt for updates
+    // JDK里使用的一个工具类对象，提供一些不安全的操作的方法，一般不会在自己的程序中使用该类
+    // 在这里主要用到其中的objectFieldOffset、putOrderedInt、compareAndSwapInt方法
     private static final Unsafe unsafe = Unsafe.getUnsafe();
+    // value成员属性的内存地址相对于对象内存地址的偏移量
     private static final long valueOffset;
 
     static {
         try {
+            //初始化valueOffset，通过unsafe.objectFieldOffset方法获取成员属性value内存地址相对于对象内存地址的偏移量
             valueOffset = unsafe.objectFieldOffset
                 (AtomicInteger.class.getDeclaredField("value"));
         } catch (Exception ex) { throw new Error(ex); }
     }
 
+    // int的值，设为volatile，保证线程之间的可见性
     private volatile int value;
 
     /**
      * Creates a new AtomicInteger with the given initial value.
-     *
+     * 构造方法，传入指定int值
      * @param initialValue the initial value
      */
     public AtomicInteger(int initialValue) {
@@ -104,7 +109,7 @@ public class AtomicInteger extends Number implements java.io.Serializable {
 
     /**
      * Eventually sets to the given value.
-     *
+     * 最终设为指定值，但其它线程不能马上看到变化，会延时一会
      * @param newValue the new value
      * @since 1.6
      */
@@ -114,18 +119,19 @@ public class AtomicInteger extends Number implements java.io.Serializable {
 
     /**
      * Atomically sets to the given value and returns the old value.
-     *
+     * 以原子方式设置为给定值，并返回旧值
      * @param newValue the new value
      * @return the previous value
      */
     public final int getAndSet(int newValue) {
+        // 这个方法中是一个无限循环，用当前对象this结合内存偏移量找到属性值，然后与AtomicInteger中的值比较，如果相等就设成newValue
         return unsafe.getAndSetInt(this, valueOffset, newValue);
     }
 
     /**
      * Atomically sets the value to the given updated value
      * if the current value {@code ==} the expected value.
-     *
+     * 如果输入的数值等于预期值，则以原子方 式将该值设置为输入的值
      * @param expect the expected value
      * @param update the new value
      * @return {@code true} if successful. False return indicates that
@@ -153,10 +159,15 @@ public class AtomicInteger extends Number implements java.io.Serializable {
 
     /**
      * Atomically increments by one the current value.
-     *
+     * 将当前值原子递增1。
      * @return the previous value
      */
     public final int getAndIncrement() {
+        /**
+         * compareAndSwapInt
+         * CAS操作，现代CPU已广泛支持，是一种原子操作；
+         * 简单地说，当期待值var5与valueOffset地址处的值相等时，设置为update值
+         */
         return unsafe.getAndAddInt(this, valueOffset, 1);
     }
 
